@@ -1,0 +1,31 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # This action runs whenever you push code to the 'main' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest # The type of virtual machine to run on
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 # Gets your repository's code
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20 # Uses Node.js version 20
+
+      - name: Install dependencies
+        run: npm install # Installs all packages listed in package.json
+
+      - name: Run predeploy script
+        run: npm run predeploy # Executes the predeploy script to build the web app
+
+      - name: Deploy to GitHub Pages
+        run: npm run deploy # Executes the deploy script to push to gh-pages branch
+        env:
+          # This token is automatically provided by GitHub Actions for your repository
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
